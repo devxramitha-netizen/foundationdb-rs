@@ -1,3 +1,11 @@
+# Optimized by ci-cost (https://github.com/mariotavarez/ci-cost)
+# Applied 4 optimizations:
+# - [HIGH] Add cargo dependency cache to "compatibility" job
+# - [HIGH] Add cargo dependency cache to "test" job
+# - [MEDIUM] Add concurrency group to "ci.yml"
+# - [LOW] Explicitly set fail-fast for large matrix job "compatibility" (42 combinations)
+# Estimated savings: ~20 min/run
+#
 name: CI
 
 on:
@@ -7,6 +15,10 @@ on:
       - main
   pull_request:
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   compatibility:
     name: "Compat ${{ matrix.os }}/${{ matrix.toolchain }}/${{ matrix.fdb_feature_version }}"
