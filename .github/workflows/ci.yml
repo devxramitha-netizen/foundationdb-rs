@@ -46,6 +46,14 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
 
+      - name: Cache cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Build
         run: cargo build --verbose -p foundationdb --no-default-features --features ${{ matrix.fdb_feature_version }}
 
@@ -79,6 +87,14 @@ jobs:
           toolchain: "${{ matrix.toolchain }}"
           components: rustfmt, clippy
 
+      - name: Cache cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Run all tests of foundationdb
         run: cargo test -p foundationdb --features num-bigint,embedded-fdb-include,fdb-7_4
       - name: Run all tests of foundationdb with trace feature enabled
@@ -107,6 +123,14 @@ jobs:
         with:
           toolchain: stable
           components: rustfmt, clippy
+
+      - name: Cache cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Fmt
         run: cargo fmt --all -- --check
